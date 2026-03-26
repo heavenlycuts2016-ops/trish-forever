@@ -15,20 +15,19 @@
     }
     .bg-layer {
       position: fixed; inset: 0; z-index: 0;
-      background: linear-gradient(160deg, #0d1b3e 0%, #1a3a5c 40%, #0d2240 70%, #071428 100%);
+      background-image: url('https://files.manuscdn.com/user_upload_by_module/session_file/310519663435002153/LLuWApgXdJmnIvOq.jpg');
+      background-size: cover;
+      background-position: center top;
+      filter: brightness(0.72) saturate(1.1);
     }
     .bg-overlay {
       position: fixed; inset: 0; z-index: 1;
-      background-image:
-        radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(1px 1px at 35% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 55% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 75% 45%, rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(1px 1px at 25% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 65% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(2px 2px at 10% 50%, rgba(173,216,255,0.4) 0%, transparent 100%),
-        radial-gradient(2px 2px at 85% 30%, rgba(173,216,255,0.4) 0%, transparent 100%);
+      background: linear-gradient(
+        to bottom,
+        rgba(10,5,20,0.18) 0%,
+        rgba(10,5,20,0.08) 50%,
+        rgba(10,5,20,0.25) 100%
+      );
     }
 
     /* ── TAP-TO-BEGIN SCREEN ── */
