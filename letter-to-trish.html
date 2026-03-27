@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>A Letter for Trish — From Serena</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100%;
+      font-family: 'Lato', sans-serif;
+      color: #1a1a2e;
+      overflow-x: hidden;
+    }
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url('https://files.manuscdn.com/user_upload_by_module/session_file/310519663435002153/LLuWApgXdJmnIvOq.jpg');
+      background-size: cover;
+      background-position: center top;
+      filter: brightness(0.82) saturate(1.15);
+    }
+    .bg-overlay {
+      position: fixed; inset: 0; z-index: 1;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.08) 0%,
+        rgba(0,0,0,0.02) 50%,
+        rgba(0,0,0,0.10) 100%
+      );
+    }
+
+    /* ── TAP-TO-BEGIN SCREEN ── */
+    #tap-screen {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 2rem;
+      background: linear-gradient(160deg, rgba(5,10,30,0.95) 0%, rgba(10,30,70,0.92) 50%, rgba(5,10,30,0.95) 100%);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+    }
+    #tap-screen.hidden { display: none; }
+    .tap-icons { font-size: 2.4rem; margin-bottom: 1.2rem; letter-spacing: 0.3rem; }
+    .tap-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.9rem, 5vw, 2.8rem);
+      color: #d0e8ff; margin-bottom: 0.5rem; line-height: 1.2;
+    }
+    .tap-sub {
+      font-size: 0.95rem; color: rgba(200,225,255,0.6);
+      font-style: italic; margin-bottom: 2.2rem;
+    }
+    .tap-btn {
+      background: linear-gradient(135deg, #3a7bd5, #1a4a9a);
+      color: #fff; border: none;
+      padding: 1rem 3rem; border-radius: 50px;
+      font-size: 1.1rem; font-family: 'Playfair Display', serif;
+      cursor: pointer; letter-spacing: 0.05em;
+      box-shadow: 0 6px 28px rgba(58,123,213,0.55);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 6px 28px rgba(58,123,213,0.55); }
+      50% { box-shadow: 0 8px 40px rgba(58,123,213,0.85); }
+    }
+
+    /* ── MAIN CONTENT ── */
+    #main-content {
+      position: relative; z-index: 10;
+      min-height: 100vh; display: none;
+      flex-direction: column; align-items: center;
+      padding: 3rem 1.5rem 5rem;
+    }
+    .letter-card {
+      background: rgba(245,250,255,0.97);
+      border-radius: 20px; max-width: 740px; width: 100%;
+      padding: clamp(2rem, 5vw, 4rem);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(58,123,213,0.2);
+      position: relative; overflow: hidden;
+    }
+    .letter-card::after {
+      content: '💙'; position: absolute;
+      bottom: 1.5rem; right: 2rem;
+      font-size: 4rem; opacity: 0.06; pointer-events: none;
+    }
+    .letter-header {
+      text-align: center; margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(58,123,213,0.25);
+    }
+    .letter-header .icons { font-size: 1.6rem; margin-bottom: 0.7rem; letter-spacing: 0.25rem; }
+    .letter-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      color: #1a3a6c; font-style: italic; margin-bottom: 0.3rem;
+    }
+    .letter-header .from-line { font-size: 0.88rem; color: #3a5a8a; letter-spacing: 0.1em; }
+
+    /* ── AUDIO PLAYER ── */
+    .audio-section {
+      background: rgba(58,123,213,0.07);
+      border: 1px solid rgba(58,123,213,0.25);
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .audio-label {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: #2a4a7a;
+      margin-bottom: 0.8rem;
+    }
+    .audio-label strong { display: block; font-size: 1rem; color: #1a3a6c; margin-top: 0.2rem; }
+    #letter-audio {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 50px;
+      outline: none;
+    }
+
+    /* ── LETTER BODY ── */
+    .letter-body {
+      font-size: clamp(1rem, 2.2vw, 1.1rem);
+      line-height: 1.95; color: #0f1e3a;
+    }
+    .letter-body .salutation {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+      color: #1a3a6c; margin-bottom: 1.5rem; font-style: italic;
+    }
+    .letter-body p { margin-bottom: 1.4rem; }
+    .letter-body .names-divider {
+      text-align: center; margin: 2rem 0;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; color: #1a3a6c;
+      letter-spacing: 0.2em; font-style: italic;
+    }
+    .letter-body .poem-section {
+      margin: 2rem 0; padding: 1.5rem 2rem;
+      border-left: 3px solid rgba(58,123,213,0.4);
+      background: rgba(58,123,213,0.05);
+      border-radius: 0 12px 12px 0;
+      font-family: 'Playfair Display', serif;
+      font-style: italic; font-size: clamp(0.95rem, 2vw, 1.05rem);
+      line-height: 2.1; color: #1a3a6c;
+    }
+    .letter-body .closing {
+      margin-top: 2.5rem; font-family: 'Playfair Display', serif;
+      font-style: italic; color: #1a3a6c; font-size: 1.05rem;
+    }
+    .letter-body .signature {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 3vw, 2rem); color: #1a4a9a; margin-top: 0.4rem;
+    }
+    .letter-body .location { font-size: 0.88rem; color: #3a5a8a; font-style: italic; margin-top: 0.3rem; }
+    .letter-body .heart { font-size: 1.6rem; display: block; margin-top: 0.3rem; }
+
+    /* ── MUSIC SECTION ── */
+    .music-section {
+      margin-top: 2.5rem; padding-top: 2rem;
+      border-top: 1px solid rgba(58,123,213,0.25); text-align: center;
+    }
+    .music-label {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 0.9rem; color: #3a5a8a; margin-bottom: 1rem;
+    }
+    .music-label strong { display: block; font-size: 1rem; color: #1a3a6c; margin-top: 0.3rem; }
+    .music-section iframe {
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.22);
+      max-width: 420px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .letter-footer {
+      text-align: center; margin-top: 2.5rem;
+      font-size: 0.8rem; color: rgba(200,225,255,0.5);
+      font-style: italic; text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    }
+    @media (max-width: 600px) { .letter-card { padding: 1.8rem 1.4rem; } }
+  </style>
+</head>
+<body>
+
+  <div class="bg-layer"></div>
+  <div class="bg-overlay"></div>
+
+  <!-- One-tap screen — required by browsers to allow audio -->
+  <div id="tap-screen" onclick="beginExperience()">
+    <div class="tap-icons">💙 🕊️ 💙 🕊️ 💙</div>
+    <h1 class="tap-title">A Letter for Trish</h1>
+    <p class="tap-sub">From Serena — with all her heart</p>
+    <button class="tap-btn">Open &amp; Listen 💙</button>
+    <p style="margin-top:1.4rem;font-size:0.8rem;color:rgba(200,225,255,0.35);font-style:italic;">
+      The letter will be read aloud to you automatically.
+    </p>
+  </div>
+
+  <!-- Main letter -->
+  <div id="main-content">
+    <div class="letter-card">
+
+      <div class="letter-header">
+        <div class="icons">💙 🕊️ 💙 🕊️ 💙 🕊️ 💙</div>
+        <h1>A Letter for Trish</h1>
+        <div class="from-line">From Serena &nbsp;·&nbsp; With All My Love</div>
+      </div>
+
+      <!-- Audio Player — Letter Reading -->
+      <div class="audio-section">
+        <div class="audio-label">
+          Serena reads this letter to you
+          <strong>Press play — this letter is for you 💙</strong>
+        </div>
+        <audio id="letter-audio" controls autoplay>
+          <source src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663435002153/JHkftXoXQROHVLdm.mp3" type="audio/mpeg"/>
+          Your browser does not support audio playback.
+        </audio>
+      </div>
+
+      <!-- Letter Body -->
+      <div class="letter-body">
+        <div class="salutation">Dear Trish,</div>
+
+        <p>I have started this letter a hundred times in my head. On the quiet mornings when the world is still and the grief sits down beside me like it always does. On the hard days when everything feels like too much. On the days when I pick up my phone just to hear your voice and remember that somebody out there truly understands. Every time I tried to find the right words, I came back to the same truth — there are no perfect words for what we carry. But there is something between us that does not need perfect words. It just needs to be said.</p>
+
+        <p>I hate how we met. I need you to know that. I hate it with everything in me. Two mommas — one in Tennessee, one in New Hampshire — and the thing that brought us together was the worst thing either of us has ever survived. Child loss. The kind of grief that does not have a name big enough to hold it. The kind that changes the shape of everything — your mornings, your breathing, the way a song hits you, the way you look at a photograph, the way you wake up and for one half-second forget, and then remember again. We did not sign up for this. We did not choose this sorority. We would choose our children over anything, over everything, without a single hesitation. We would trade every friendship, every good thing, every blessing — just to have them back. And that is something only another angel momma truly understands.</p>
+
+        <p>But here we are. And here is what I know with everything I have: <strong>God did not put you in my path by accident.</strong> Out of all the people in this world, He gave me you. A woman who does not flinch from the pain. A woman who says their names without being asked. A woman who shows up from New Hampshire when people right here in Tennessee have not. That is not a coincidence. That is grace.</p>
+
+        <div class="names-divider">Lucas &nbsp;·&nbsp; Ryan</div>
+
+        <p>Our boys. Gone from our arms but never — not for one single second — gone from our hearts. Lucas, my son, who left a hole in this world that nothing will ever fill. And Ryan, your son — twenty-four years old, and <strong>always, always your baby.</strong> That is what people who have not lost a child do not understand. They think the age changes the grief. It does not. A mother's love does not have an expiration date. It does not shrink with the years. It does not care how tall they grew or how old they got. He was yours from his very first breath, and he is yours still. <strong>From feet to wings too soon.</strong> That is what it is. That is what it will always be.</p>
+
+        <p>And yet — here we are. Still standing. Still breathing. Still showing up for each other. <strong>Only one call away.</strong></p>
+
+        <p>You have been that call for me, Trish. On the days when the weight of everything comes crashing back — the grief, the business, the surgery, the fight, all of it piling up at once — you are the one I know I can reach. You do not try to fix it. You do not tell me it gets easier. You just show up. You sit in it with me. And that is the rarest, most precious thing one human being can do for another. I hope you know — from the bottom of everything I have — that I am that call for you too. Tennessee to New Hampshire. States apart. It does not matter. We show up. We always have. We always will.</p>
+
+        <p>This is not the friendship either of us would have chosen. We would have chosen our boys. We would choose them every time. But since we are here — since we are in this sorority neither of us ever wanted to join — I am grateful, deeply and completely grateful, that it is you beside me. That out of everyone in this world, it is your voice on the other end of the line. That it is your name I see on my phone and feel my whole chest settle just a little.</p>
+
+        <div class="poem-section">
+          Two mommas.<br/>
+          Two boys in heaven.<br/>
+          One bond that death, distance,<br/>
+          and time will never touch.<br/>
+          That is what we are.<br/>
+          That is what we will always be.
+        </div>
+
+        <p>I love you, Trish. From hell and back — and I mean that in the truest, most sacred way. We have both been there. We both know what that road looks like. And we walked it, and we are still here, and we found each other on the way. That is not nothing. <strong>That is everything.</strong></p>
+
+        <p>Thank you for Ryan — for every story you have shared about him, for every time his name came up and you let me know him a little through your love for him.</p>
+
+        <p>Thank you for Lucas — for honoring him, for saying his name, for never treating my grief like something to get over or move past.</p>
+
+        <p>Thank you for showing up from New Hampshire when most people right here in Tennessee have not.</p>
+
+        <p>Thank you for being only one call away, every single time.</p>
+
+        <p>Thank you for being my family when I needed one most.</p>
+
+        <p>Our boys are watching over us. I believe that with everything I have. And I think they are glad their mommas found each other. I think they are glad we did not have to carry this alone.</p>
+
+        <p><strong>Lucas and Ryan — from feet to wings too soon. But never, ever forgotten. And their mommas — still here, still standing, still only one call away.</strong></p>
+
+        <div class="closing">All my love, always —</div>
+        <div class="signature">Serena</div>
+        <div class="location">Kingsport, Tennessee</div>
+        <span class="heart">💙</span>
+      </div>
+
+      <!-- Music Section -->
+      <div class="music-section">
+        <div class="music-label">
+          A song for our boys — and for us
+          <strong>A Song for You, Trish &nbsp;·&nbsp; 💙</strong>
+        </div>
+        <iframe
+          width="100%"
+          height="240"
+          src="https://www.youtube.com/embed/HxPnAOMpbqA?rel=0"
+          frameborder="0"
+          allowfullscreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+        </iframe>
+      </div>
+
+    </div><!-- end letter-card -->
+
+    <div class="letter-footer">
+      Made with love &nbsp;·&nbsp; For Trish, always 💙
+    </div>
+  </div><!-- end main-content -->
+
+  <script>
+    function beginExperience() {
+      document.getElementById('tap-screen').classList.add('hidden');
+      const main = document.getElementById('main-content');
+      main.style.display = 'flex';
+      // Autoplay the audio
+      const audio = document.getElementById('letter-audio');
+      audio.play().catch(() => {
+        // Autoplay blocked — player is still visible so she can press play
+      });
+    }
+  </script>
+</body>
+</html>
